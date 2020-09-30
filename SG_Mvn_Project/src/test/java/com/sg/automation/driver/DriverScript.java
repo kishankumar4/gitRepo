@@ -51,6 +51,10 @@ public class DriverScript {
 		Class cls = null; //to apply reflection concept we need class ,Object,Method
 		Object obj = null;
 		Method meth = null;
+		int project=0;
+		int module=0;
+		int testCases=0;
+		
 		try {
 			//going to project sheet ,  getRowNumber will give row
 			pRows = datatable.getRowNumber(controller, "Projects");//filename,sheetName
@@ -60,6 +64,7 @@ public class DriverScript {
 				//In project sheet if execution status is Yes
 				executionStatus = datatable.getCellData(controller, "Projects", "ExecuteProject", i); //filename,sheetName,columnName,RowNumber
 				if(executionStatus.equalsIgnoreCase("Yes")) { //If it is yes read project name , connect that sheet
+					project++;
 					String projectName = datatable.getCellData(controller, "Projects", "ProjectName", i); //projectName is column , i is rowNumber
 					
 					//after reading project sheet going to that sheet
@@ -69,6 +74,7 @@ public class DriverScript {
 					{
 						executionStatus = datatable.getCellData(controller, projectName, "ExecuteModule", j); //executeModel is columnName
 						if(executionStatus.equalsIgnoreCase("Yes")) {
+							module++;
 							//make module name global so declare in class
 							moduleName = datatable.getCellData(controller, projectName, "ModuleNames", j);
 							
@@ -79,6 +85,7 @@ public class DriverScript {
 								executionStatus = datatable.getCellData(controller, moduleName, "ExecuteTest", k);
 								if(executionStatus.equalsIgnoreCase("Yes")) //If it is yes apply reflection concept
 								{
+									testCases++;
 									String className = datatable.getCellData(controller, moduleName, "ClassName", k);//filename,sheetname,columnName,row
 									String scriptName = datatable.getCellData(controller, moduleName, "TestScriptName", k);
 									 testCaseID=datatable.getCellData(controller, moduleName, "TestCaseID", k);
@@ -97,6 +104,19 @@ public class DriverScript {
 						}
 					}
 				}
+			}
+			if(project>0) {
+				if(module>0) {
+					if(testCases==0) {
+						System.out.println("No test cases selected");
+					}
+					
+				}else {
+					System.out.println("no module selected");
+				}
+				
+			}else {
+				System.out.println("no project is selected for execution");
 			}
 		}catch(Exception e)
 		{
